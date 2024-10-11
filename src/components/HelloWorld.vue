@@ -21,10 +21,14 @@ const someStr: string = 'dddd';
 
 <template>
   <h1>Hello World!</h1>
-  <button @click="btnClick(someStr)">btn</button>
+  <button class="btn" @click="btnClick(1)"><span class="btn-span">btn</span> </button>
   <h2>{{ someNum.num }}</h2>
 </template>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.btn {
+    &-span {
+      color: red;
+    }
+}
 </style>

@@ -48,11 +48,11 @@ export default (env: EnvVariables) => {
                 {
                     test: /\.scss$/,
                     use: [
-                        'style-loader',
+                        'vue-style-loader',
                         'css-loader',
                         'sass-loader'
                     ],
-                },
+                }
             ],
         },
         plugins: [
