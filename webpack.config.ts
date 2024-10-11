@@ -56,10 +56,16 @@ export default (env: EnvVariables) => {
             ],
         },
         plugins: [
+            new webpack.DefinePlugin({
+                __VUE_OPTIONS_API__: JSON.stringify(false),
+                __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+                __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+            }),
+
             new VueLoaderPlugin(),
             new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'src', 'index.html'),favicon: path.resolve(__dirname, 'public', 'favicon.ico') }),
         ],
-        devtool: isDev && 'inline-source-map',
+        devtool: isDev && 'source-map',
         devServer: {
             historyApiFallback: true,
             static: {
