@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
-import Login from "@/Pages/Login.vue";
 </script>
 <template>
- <Login />
+  <RouterLink to="/">Login</RouterLink>
+  <RouterLink to="todos">Todos</RouterLink>
+  <RouterView />
 </template>
