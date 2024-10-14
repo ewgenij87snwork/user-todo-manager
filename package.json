@@ -9,7 +9,14 @@
     "serve": "webpack serve --hot",
     "lint": "eslint './**/*.{js,ts,vue}'",
     "lint:fix": "eslint './**/*.{js,ts,vue}' --fix",
-    "format": "prettier --write './**/*.{js,ts,vue,scss,html,json}'"
+    "format": "prettier --write './**/*.{js,ts,vue,scss,html,json}'",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue,scss,html,json}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -32,6 +39,8 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-vue": "^9.29.0",
     "html-webpack-plugin": "^5.6.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "sass": "^1.79.4",
     "sass-loader": "^16.0.2",
