@@ -4,12 +4,11 @@ import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
+const { user } = storeToRefs(useUserStore());
 
 onMounted(async () => {
   await userStore.fetchUser('Leanne Graham', '1-770-736-8031 x56442');
 });
-
-const { user } = storeToRefs(useUserStore());
 </script>
 
 <template>

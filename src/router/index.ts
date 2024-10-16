@@ -1,27 +1,43 @@
-import Login from '@/views/Login.vue';
 import Todos from '@/views/Todos.vue';
-import { createMemoryHistory, createRouter } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  NavigationGuardNext,
+  RouteLocationNormalized,
+  RouteRecordRaw
+} from 'vue-router';
+import { useUserStore } from '@/store/userStore';
 
-const routes = [
-  { path: '', component: Login },
-  { path: '/todos', component: Todos }
+const checkLogin = (
+  _to: RouteLocationNormalized,
+  _from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const userStore = useUserStore();
+  if (!userStore.user?.id) {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
+};
+
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Login',
+    component: () => import('@/views/Login.vue')
+  },
+  {
+    path: '/todos',
+    name: 'Todos',
+    component: Todos,
+    beforeEnter: checkLogin
+  }
 ];
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes
 });
 
 export default router;
-
-// const routes = [
-//     { path: '', component: Login},
-//     { path: '/todos', component: Todos}
-// ]
-//
-// const router = createRouter({
-//     history: createMemoryHistory(),
-//     routes
-// })
-//
-// export default router;
