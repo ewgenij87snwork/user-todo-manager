@@ -20,7 +20,7 @@ export default (env: EnvVariables) => {
       path: path.resolve(__dirname, 'dist')
     },
     resolve: {
-      extensions: ['.ts', '.js', '.vue'],
+      extensions: ['.ts', '.js', '.vue', '.svg'],
       alias: {
         '@': path.resolve(__dirname, './src/')
       }
@@ -42,6 +42,13 @@ export default (env: EnvVariables) => {
         {
           test: /\.scss$/,
           use: ['vue-style-loader', 'css-loader', 'sass-loader']
+        },
+        {
+          test: /\.svg$/,
+          type: 'asset/resource',
+          generator: {
+            filename: 'assets/[hash][ext][query]'
+          }
         }
       ]
     },
