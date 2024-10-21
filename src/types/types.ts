@@ -21,3 +21,11 @@ interface FieldValidation {
   pattern?: RegExp;
   errorMessage?: string;
 }
+
+export interface Todo {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+  favorite?: boolean;
+}
