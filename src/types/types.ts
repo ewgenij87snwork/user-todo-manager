@@ -10,7 +10,7 @@ export interface FormField {
   label: string;
   type: string;
   placeholder: string;
-  example: string;
+  example?: string;
   required: boolean;
   validation: FieldValidation;
 }
@@ -24,7 +24,7 @@ interface FieldValidation {
 
 export interface Todo {
   userId: number;
-  id: number;
+  id?: number;
   title: string;
   completed: boolean;
   favorite?: boolean;

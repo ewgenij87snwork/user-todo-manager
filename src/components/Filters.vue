@@ -36,7 +36,7 @@ const applyFilters = () => {
       class="todo-filters__search"
       v-model="searchQuery"
       @input="applyFilters"
-      placeholder="Enter title..."
+      placeholder="Search by title..."
     />
     <select v-model="selectedStatus" @change="applyFilters">
       <option value="">All</option>
@@ -56,12 +56,16 @@ const applyFilters = () => {
 
 <style scoped lang="scss">
 .todo-filters {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 
   input,
   select {
     margin-right: 10px;
-    padding: 5px;
+    padding: 2px;
+  }
+
+  select:last-child {
+    margin-right: 0;
   }
 }
 </style>

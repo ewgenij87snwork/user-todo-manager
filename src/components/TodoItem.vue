@@ -30,11 +30,11 @@ const toggleFavorite = () => {
   align-items: center;
   gap: 10px;
   min-height: 30px;
-  width: 300px;
+  width: 100%;
   border-radius: 5px;
   border: 1px solid rgba(75, 133, 79, 0.43);
   padding: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   background: rgba(72, 133, 168, 0.08);
   cursor: default;
   overflow: hidden;

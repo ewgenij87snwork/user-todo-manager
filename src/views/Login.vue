@@ -184,6 +184,7 @@ h1 {
     color: red;
     font-size: 14px;
     margin-top: 4px;
+    opacity: 0.7;
   }
 }
 </style>
