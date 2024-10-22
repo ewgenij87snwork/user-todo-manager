@@ -15,10 +15,9 @@ const toggleFavorite = () => {
 </script>
 
 <template>
-  <div :class="['todo-item', { 'todo-item__favorite': todo.favorite }]">
-    <p></p>
+  <div :class="['todo-item', { 'todo-item__favorite': todo.favorite }]" v-show="!todo.hidden">
     <img :src="todo.completed ? checked : unchecked" alt="" class="complete" />
-    <p>{{ todo.title }}</p>
+    <span>{{ todo.title }}</span>
     <div class="todo-actions">
       <button @click="toggleFavorite" :class="todo.favorite ? 'favorite' : 'unfavorite'"></button>
     </div>
@@ -29,19 +28,25 @@ const toggleFavorite = () => {
 .todo-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  height: 30px;
-  width: 700px;
+  gap: 10px;
+  min-height: 30px;
+  width: 300px;
   border-radius: 5px;
   border: 1px solid rgba(75, 133, 79, 0.43);
   padding: 5px;
   margin-bottom: 15px;
   background: rgba(72, 133, 168, 0.08);
   cursor: default;
+  overflow: hidden;
+
+  &:hover {
+    transform: scale(1.01);
+  }
 
   &__favorite {
     background: rgba(72, 133, 168, 0.31);
   }
+
   .complete {
     width: 25px;
     height: 25px;

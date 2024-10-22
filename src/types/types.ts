@@ -28,4 +28,5 @@ export interface Todo {
   title: string;
   completed: boolean;
   favorite?: boolean;
+  hidden?: boolean;
 }

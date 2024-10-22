@@ -5,6 +5,7 @@ import { Todo } from '@/types/types';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import TodoItem from '@/components/TodoItem.vue';
+import Filters from '@/components/Filters.vue';
 
 const { user } = storeToRefs(useUserStore());
 let allTodos = ref<Todo[]>([]);
@@ -46,31 +47,35 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="header">
-    <h1>Todos</h1>
-    <h2>
+  <div class="todos">
+    <h3>
       {{ user?.name }}
       <span>{{ user?.companyName }}</span>
-    </h2>
+    </h3>
+    <main>
+      <Filters :todos="allTodos" />
+      <TodoItem
+        v-for="todo in allTodos"
+        :key="todo.id"
+        :todo="todo"
+        @toggle-favorite="handleToggleFavorite"
+      />
+    </main>
   </div>
-  <main>
-    <h2>{{ allTodos.length }}</h2>
-    <TodoItem
-      v-for="todo in allTodos"
-      :key="todo.id"
-      :todo="todo"
-      @toggle-favorite="handleToggleFavorite"
-    />
-  </main>
 </template>
 
 <style scoped lang="scss">
-.header {
-  display: flex;
-  justify-content: space-around;
-  align-items: baseline;
+.todos {
+  position: relative;
 
-  h2 {
+  h3 {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    margin: 0 0 20px;
+    right: 10px;
+    position: absolute;
+
     span {
       color: #9f9696;
       margin-left: 50px;
@@ -82,5 +87,19 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+@media (max-width: 576px) {
+  .todos {
+    h3 {
+      position: relative;
+      justify-content: center;
+      flex-direction: row;
+
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
 }
 </style>
