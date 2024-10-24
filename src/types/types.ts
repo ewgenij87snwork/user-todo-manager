@@ -1,5 +1,3 @@
-import { ToastType } from '@/types/enum';
-
 export interface User {
   id: number;
   name: string;
@@ -31,9 +29,4 @@ export interface Todo {
   completed: boolean;
   favorite?: boolean;
   hidden?: boolean;
-}
-
-export interface Toast {
-  msg: string;
-  type: ToastType;
 }

@@ -7,15 +7,14 @@ import axios from 'axios';
 import TodoItem from '@/components/TodoItem.vue';
 import Filters from '@/components/Filters.vue';
 import AddTodo from '@/components/AddTodo.vue';
-import Toast from '@/components/Toast.vue';
 import { ToastType } from '@/types/enum';
+import { useToastStore } from '@/store/toastStore';
 
 const { user } = storeToRefs(useUserStore());
 let allTodos = ref<Todo[]>([]);
 let favoriteTodos = ref<Todo[]>([]);
-let showToast = ref(false);
-let toastMsg = ref('');
-let toastType = ref<ToastType>(ToastType.ERROR);
+
+const toastStore = useToastStore();
 
 const getTodos = async () => {
   try {
@@ -28,9 +27,7 @@ const getTodos = async () => {
       favorite: favoriteTodos.value.some((favoriteTodo: Todo) => favoriteTodo.id === todo.id)
     }));
   } catch {
-    showToast.value = true;
-    toastMsg.value = 'Error on getting Todos';
-    toastType.value = ToastType.ERROR;
+    toastStore.show(ToastType.ERROR, 'Error on getting Todos');
   }
 };
 
@@ -55,7 +52,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <Toast v-if="showToast" :msg="toastMsg" :type="toastType" />
   <h3>
     {{ user?.name }}
     <span>{{ user?.companyName }}</span>

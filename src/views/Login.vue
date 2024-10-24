@@ -4,16 +4,14 @@ import { computed, reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { FormField } from '@/types/types';
-import Toast from '@/components/Toast.vue';
 import { ToastType } from '@/types/enum';
+import { useToastStore } from '@/store/toastStore';
 
 const userStore = useUserStore();
 const { user } = storeToRefs(useUserStore());
-const router = useRouter();
+const toastStore = useToastStore();
 
-const showToast = ref(false);
-const toastType = ref(ToastType.ERROR);
-const toastMsg = ref('Wrong Name or Phone');
+const router = useRouter();
 
 const formFields = ref<FormField[]>([
   {
@@ -83,18 +81,16 @@ const hasErrors = computed(() => {
 
 const login = async () => {
   const { name, phone } = formData;
-  showToast.value = false;
   await userStore.fetchUser(name, phone);
   if (user.value && user.value.id) {
     await router.push('/todos');
   } else {
-    showToast.value = true;
+    toastStore.show(ToastType.ERROR, 'Wrong Name or Phone');
   }
 };
 </script>
 
 <template>
-  <Toast v-if="showToast" :msg="toastMsg" :type="toastType" />
   <div class="container">
     <h1>Login</h1>
 

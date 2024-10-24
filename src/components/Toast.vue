@@ -1,35 +1,13 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { Toast } from '@/types/types';
+import { useToastStore } from '@/store/toastStore';
 
-const props = defineProps<Toast>();
-
-const isVisible = ref(false);
-const type = ref('');
-const msg = ref('');
-
-watch(
-  () => props,
-  () => {
-    isVisible.value = true;
-    type.value = props.type;
-    msg.value = props.msg;
-    setTimeout(() => {
-      hideToast();
-    }, 3000);
-  },
-  { immediate: true }
-);
-
-const hideToast = () => {
-  isVisible.value = false;
-};
+const toastStore = useToastStore();
 </script>
 
 <template>
-  <div v-if="isVisible" class="toast" :class="props.type">
-    <span>{{ msg }}</span>
-    <button @click="hideToast" :class="props.type">✖</button>
+  <div v-if="toastStore.showToast" class="toast" :class="toastStore.type">
+    <span>{{ toastStore.msg }}</span>
+    <button @click="toastStore.hide" :class="toastStore.type">✖</button>
   </div>
 </template>
 

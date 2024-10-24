@@ -2,16 +2,14 @@
 import { computed, reactive, ref } from 'vue';
 import { FormField, Todo } from '@/types/types';
 import axios from 'axios';
-import Toast from '@/components/Toast.vue';
 import { ToastType } from '@/types/enum';
+import { useToastStore } from '@/store/toastStore';
 
 const { todos } = defineProps<{
   todos: Todo[];
 }>();
 
-const showToast = ref(false);
-const toastMsg = ref('');
-const toastType = ref<ToastType>(ToastType.SUCCESS);
+const toastStore = useToastStore();
 
 const formFields = ref<FormField[]>([
   {
@@ -76,7 +74,6 @@ const hasErrors = computed(() => {
 });
 
 const addTodo = async () => {
-  showToast.value = false;
   const newTodo: Todo = {
     title: formData.title,
     userId: +formData.userId,
@@ -88,20 +85,15 @@ const addTodo = async () => {
     if (resp.status === 201) {
       todos.unshift(newTodo);
 
-      showToast.value = true;
-      toastMsg.value = 'Todo added successfully';
-      toastType.value = ToastType.SUCCESS;
+      toastStore.show(ToastType.SUCCESS, 'Todo added successfully');
     }
   } catch {
-    showToast.value = true;
-    toastMsg.value = 'Todo NOT added';
-    toastType.value = ToastType.ERROR;
+    toastStore.show(ToastType.ERROR, 'Todo NOT added');
   }
 };
 </script>
 
 <template>
-  <Toast v-if="showToast" :msg="toastMsg" :type="toastType" />
   <div class="add-todo">
     <form @submit.prevent="addTodo" class="form">
       <div v-for="field in formFields" :key="field.id" class="add-todo__input">
