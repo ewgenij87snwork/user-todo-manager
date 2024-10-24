@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/userStore';
 import { onMounted } from 'vue';
 import TodoItem from '@/components/TodoItem.vue';
@@ -7,7 +6,7 @@ import Filters from '@/components/Filters.vue';
 import { useTodosStore } from '@/store/todosStore';
 import AddTodo from '@/components/AddTodo.vue';
 
-const { user } = storeToRefs(useUserStore());
+const userStore = useUserStore();
 
 const todosStore = useTodosStore();
 
@@ -18,8 +17,8 @@ onMounted(() => {
 
 <template>
   <h3>
-    {{ user?.name }}
-    <span>{{ user?.companyName }}</span>
+    {{ userStore.user?.name }}
+    <span>{{ userStore.user?.companyName }}</span>
   </h3>
   <div class="todos">
     <main>
