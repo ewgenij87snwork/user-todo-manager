@@ -1,53 +1,18 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/userStore';
-import { Todo } from '@/types/types';
-import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import { onMounted } from 'vue';
 import TodoItem from '@/components/TodoItem.vue';
 import Filters from '@/components/Filters.vue';
+import { useTodosStore } from '@/store/todosStore';
 import AddTodo from '@/components/AddTodo.vue';
-import { ToastType } from '@/types/enum';
-import { useToastStore } from '@/store/toastStore';
 
 const { user } = storeToRefs(useUserStore());
-let allTodos = ref<Todo[]>([]);
-let favoriteTodos = ref<Todo[]>([]);
 
-const toastStore = useToastStore();
-
-const getTodos = async () => {
-  try {
-    favoriteTodos.value = JSON.parse(localStorage.getItem('favoriteTodos') || '[]');
-
-    const response = await axios.get<Todo[]>('https://jsonplaceholder.typicode.com/todos');
-
-    allTodos.value = response.data.map((todo: Todo) => ({
-      ...todo,
-      favorite: favoriteTodos.value.some((favoriteTodo: Todo) => favoriteTodo.id === todo.id)
-    }));
-  } catch {
-    toastStore.show(ToastType.ERROR, 'Error on getting Todos');
-  }
-};
-
-const handleToggleFavorite = (selectedTodo: Todo) => {
-  const existTodo = allTodos.value.find((todo) => todo.id === selectedTodo.id);
-  if (existTodo) {
-    existTodo.favorite = !existTodo.favorite;
-  }
-
-  const isInLocalStorage = favoriteTodos.value.find((todo: Todo) => todo.id === selectedTodo.id);
-  if (isInLocalStorage) {
-    favoriteTodos.value.splice(favoriteTodos.value.indexOf(isInLocalStorage), 1);
-  } else {
-    favoriteTodos.value.push(selectedTodo);
-  }
-  localStorage.setItem('favoriteTodos', JSON.stringify(favoriteTodos.value));
-};
+const todosStore = useTodosStore();
 
 onMounted(() => {
-  getTodos();
+  todosStore.getTodos();
 });
 </script>
 
@@ -58,13 +23,13 @@ onMounted(() => {
   </h3>
   <div class="todos">
     <main>
-      <AddTodo :todos="allTodos" />
-      <Filters :todos="allTodos" />
+      <AddTodo />
+      <Filters />
       <TodoItem
-        v-for="todo in allTodos"
+        v-for="todo in todosStore.todos"
         :key="todo.id"
         :todo="todo"
-        @toggle-favorite="handleToggleFavorite"
+        @toggle-favorite="todosStore.handleToggleFavorite"
       />
     </main>
   </div>

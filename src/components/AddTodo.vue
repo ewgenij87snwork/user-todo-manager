@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
-import { FormField, Todo } from '@/types/types';
-import axios from 'axios';
-import { ToastType } from '@/types/enum';
-import { useToastStore } from '@/store/toastStore';
+import { FormField } from '@/types/types';
+import { useTodosStore } from '@/store/todosStore';
 
-const { todos } = defineProps<{
-  todos: Todo[];
-}>();
-
-const toastStore = useToastStore();
+const todosStore = useTodosStore();
 
 const formFields = ref<FormField[]>([
   {
@@ -72,30 +66,11 @@ const hasErrors = computed(() => {
     Object.values(formData).some((value) => value.trim() === '')
   );
 });
-
-const addTodo = async () => {
-  const newTodo: Todo = {
-    title: formData.title,
-    userId: +formData.userId,
-    completed: false
-  };
-
-  try {
-    const resp = await axios.post('https://jsonplaceholder.typicode.com/todos');
-    if (resp.status === 201) {
-      todos.unshift(newTodo);
-
-      toastStore.show(ToastType.SUCCESS, 'Todo added successfully');
-    }
-  } catch {
-    toastStore.show(ToastType.ERROR, 'Todo NOT added');
-  }
-};
 </script>
 
 <template>
   <div class="add-todo">
-    <form @submit.prevent="addTodo" class="form">
+    <form @submit.prevent="todosStore.addTodo(formData.title, formData.userId)" class="form">
       <div v-for="field in formFields" :key="field.id" class="add-todo__input">
         <input
           :type="field.type"

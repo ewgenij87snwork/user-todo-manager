@@ -1,32 +1,11 @@
 <script setup lang="ts">
-import { Todo } from '@/types/types';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import { useTodosStore } from '@/store/todosStore';
 
-const { todos } = defineProps<{
-  todos: Todo[];
-}>();
-
-const selectedStatus = ref('');
-const selectedUser = ref('');
-const searchQuery = ref('');
-
-const uniqueUserIds = computed(() => Array.from(new Set(todos.map((todo: any) => todo.userId))));
-
-const applyFilters = () => {
-  todos.forEach((todo: Todo) => {
-    const statusMatch =
-      (selectedStatus.value === 'uncompleted' && !todo.completed) ||
-      (selectedStatus.value === 'completed' && todo.completed) ||
-      (selectedStatus.value === 'favorite' && todo.favorite) ||
-      selectedStatus.value === '';
-
-    const userMatch = selectedUser.value.length === 0 || todo.userId === +selectedUser.value;
-
-    const searchMatch = todo.title.toLowerCase().includes(searchQuery.value.toLowerCase());
-
-    todo.hidden = !(statusMatch && userMatch && searchMatch);
-  });
-};
+const todosStore = useTodosStore();
+const uniqueUserIds = computed(() =>
+  Array.from(new Set(todosStore.todos.map((todo: any) => todo.userId)))
+);
 </script>
 
 <template>
@@ -34,18 +13,18 @@ const applyFilters = () => {
     <input
       type="text"
       class="todo-filters__search"
-      v-model="searchQuery"
-      @input="applyFilters"
+      v-model="todosStore.searchQuery"
+      @input="todosStore.applyFilters"
       placeholder="Search by title..."
     />
-    <select v-model="selectedStatus" @change="applyFilters">
+    <select v-model="todosStore.selectedStatus" @change="todosStore.applyFilters">
       <option value="">All</option>
       <option value="uncompleted">Uncompleted</option>
       <option value="completed">Completed</option>
       <option value="favorite">Favorite</option>
     </select>
 
-    <select v-model="selectedUser" @change="applyFilters">
+    <select v-model="todosStore.selectedUser" @change="todosStore.applyFilters">
       <option value="">All Users</option>
       <option v-for="userId in uniqueUserIds" :key="userId" :value="userId">
         {{ userId }}
