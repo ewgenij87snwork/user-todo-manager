@@ -2,10 +2,16 @@
 import { computed, reactive, ref } from 'vue';
 import { FormField, Todo } from '@/types/types';
 import axios from 'axios';
+import Toast from '@/components/Toast.vue';
+import { ToastType } from '@/types/enum';
 
 const { todos } = defineProps<{
   todos: Todo[];
 }>();
+
+const showToast = ref(false);
+const toastMsg = ref('');
+const toastType = ref<ToastType>(ToastType.SUCCESS);
 
 const formFields = ref<FormField[]>([
   {
@@ -17,7 +23,7 @@ const formFields = ref<FormField[]>([
     validation: {
       minLength: 3,
       maxLength: 50,
-      pattern: /^[a-zA-Z\s]+$/
+      pattern: /^[0-9a-zA-Z\s\-()]{1,25}$/
     }
   },
   {
@@ -70,6 +76,7 @@ const hasErrors = computed(() => {
 });
 
 const addTodo = async () => {
+  showToast.value = false;
   const newTodo: Todo = {
     title: formData.title,
     userId: +formData.userId,
@@ -78,19 +85,23 @@ const addTodo = async () => {
 
   try {
     const resp = await axios.post('https://jsonplaceholder.typicode.com/todos');
-    console.log(resp);
     if (resp.status === 201) {
       todos.unshift(newTodo);
-      alert('New Todo created');
+
+      showToast.value = true;
+      toastMsg.value = 'Todo added successfully';
+      toastType.value = ToastType.SUCCESS;
     }
-  } catch (e) {
-    console.error('Error adding todo:', e);
-    alert('Failed to add Todo');
+  } catch {
+    showToast.value = true;
+    toastMsg.value = 'Todo NOT added';
+    toastType.value = ToastType.ERROR;
   }
 };
 </script>
 
 <template>
+  <Toast v-if="showToast" :msg="toastMsg" :type="toastType" />
   <div class="add-todo">
     <form @submit.prevent="addTodo" class="form">
       <div v-for="field in formFields" :key="field.id" class="add-todo__input">

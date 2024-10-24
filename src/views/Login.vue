@@ -4,10 +4,16 @@ import { computed, reactive, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { FormField } from '@/types/types';
+import Toast from '@/components/Toast.vue';
+import { ToastType } from '@/types/enum';
 
 const userStore = useUserStore();
 const { user } = storeToRefs(useUserStore());
 const router = useRouter();
+
+const showToast = ref(false);
+const toastType = ref(ToastType.ERROR);
+const toastMsg = ref('Wrong Name or Phone');
 
 const formFields = ref<FormField[]>([
   {
@@ -77,16 +83,18 @@ const hasErrors = computed(() => {
 
 const login = async () => {
   const { name, phone } = formData;
+  showToast.value = false;
   await userStore.fetchUser(name, phone);
   if (user.value && user.value.id) {
     await router.push('/todos');
   } else {
-    alert('Invalid credentials. Please try again.');
+    showToast.value = true;
   }
 };
 </script>
 
 <template>
+  <Toast v-if="showToast" :msg="toastMsg" :type="toastType" />
   <div class="container">
     <h1>Login</h1>
 
